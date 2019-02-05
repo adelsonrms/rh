@@ -1,0 +1,123 @@
+﻿@model ERP.Presentation.Api.Models.LoginViewModel
+@{
+    ViewBag.Title = "Efetuar login";
+}
+
+<div class="container-fluid">
+    
+    
+    <div class="row">
+        <div class="col-md-5 col-md-offset-3">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <img class="pull-left" src="~/Images/logo.png" style="height: 27px">
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <p class="laranja">
+                        Informe o login de acesso previamente criado no sistema.<br/>
+                        <strong>Atenção</strong> : Somente usuários &#64;tecnun.com.br terão acesso ao sistema.
+                    </p>
+
+                    <section id="loginForm">
+
+                        @using (Html.BeginForm("Login", "Account", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, new {@class = "form-horizontal", role = "form", id = "frmLogin"}))
+                        {
+                            <fieldset>
+                                <div class="row">
+                                    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                                    <div class="form-inline col-lg-12">
+
+                                        <div class="input-group" style="margin-bottom: 15px">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", id = "txtEmail"})
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
+
+                                        <div class="input-group" style="margin-bottom: 15px">
+                                            <span class="input-group-addon"><i>&#64;</i></span>
+                                            <button class="btn btn-default" disabled="disabled">tecnun.com.br</button>
+                                        </div>
+
+                                        <div class="input-group" style="margin-bottom: 15px">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                            @Html.PasswordFor(m => m.Password, new {@class = "form-control", id = "txtSenha", placeholder = "Senha..."})
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Password, "", new {@class = "text-danger"})
+
+                                    </div>
+                                </div>
+
+                                <br/>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="checkbox-inline">
+                                            @Html.CheckBoxFor(m => m.RememberMe) Lembrar-me ?
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                            </fieldset>
+                            <!-- Change this to a button or input when using this as a form 
+                            <a href="../../DashboardLayout/pages/index.html" class="btn btn-lg btn-success btn-block">Entrar</a>
+                            -->
+                        }
+
+                    </section>
+
+                    <div class="panel-footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <input type="submit" value="Entrar" class="btn btn-primary btn-block" onclick="frmLogin.submit()" />
+                                </div>
+
+                                <div class="col-lg-4">
+                                    @using (Html.BeginForm("LoginOffice365", "Account", new { provider = "OpenIdConnect", returnUrl = "/" }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "frmOffice365Login" }))
+                                    {
+                                        <a onclick="frmOffice365Login.submit()" href="#"><img class="pull-left" src="~/Images/LoginMS_ContaMS.png"></a>
+                                    }
+                                </div>
+
+                                
+                                <div class="col-lg-2" style="display: none">
+                                    @Html.ActionLink("Registrar", "Registrar", null, new { id = "lnkRegistrar", @class = "btn btn-primary btn-block" })
+                                </div>
+                            </div>
+                            <div class="nav-divider">Ou</div>
+                            <div class="row">
+                                
+                            </div>
+                        </div>
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-5 col-md-offset-3">
+            
+
+
+            @*@using (Html.BeginForm("ExternalLogin", "Account", FormMethod.Post, new { ReturnUrl = "/Home/Index/" }))
+        {
+                @Html.ActionLink("Click here to sign in", "SignIn", "Auth", new { area = "" }, new { @class = "btn btn-primary btn-large" })
+            <div class="form-group">
+                <span class="sp-vertical">
+                    <button type="submit" class="btn btn-lg  btn-primary btn-block" id="OpenIdConnect" name="provider" value="OpenIdConnect" title="Faça login usando sua conta do Office 365">Logar com Office 365</button><br />
+                </span>
+            </div>
+        }*@
+        </div>
+    </div>
+
+
+</div>

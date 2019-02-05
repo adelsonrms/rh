@@ -1,0 +1,41 @@
+﻿@model ERP.Presentation.Api.Models.ErrorViewModel
+@{
+    ViewBag.Title = "Erro Login";
+}
+
+<div class="container-fluid">
+    
+    
+    <div class="row">
+        <div class="col-md-5 col-md-offset-3">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <img class="pull-left" src="~/Images/logo.png" style="height: 27px">
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="alert alert-danger fade in">
+                        <strong>Erro durante o login !</strong>
+                        <br />
+                        <p></p>
+                        <br />
+                        <p>
+                            @Html.DisplayTextFor(mError => mError.Mensagem)
+                        </p>
+                        <br />
+                        <p>Solicite o acesso ao Administrador do Sistema</p>
+                    </div>
+                </div>
+                
+                <div class="panel-footer">
+                    <a href="@Url.Action("Login")" class="btn btn-link">Login</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

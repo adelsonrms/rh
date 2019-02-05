@@ -1,0 +1,218 @@
+﻿@using RH.Shared
+@using RH.Shared.Extensions
+@model RH.ViewModel.FuncionarioViewModel
+
+<div id="TabInfo" class="tab-pane active">
+    <div class="container-fluid" style="padding-top: 8px">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-user-edit fa-fw"></i> Informações de Identificação do Funcionário
+                    <div id="MenuOpcoes" class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-toolbox fa-fw"></i>Opções
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a class="btn-link btnEditar" href="#" onclick="HabilitarModoEdicao(true)">&nbsp;Editar</a>
+                                </li>
+                                <li>
+                                    <a class="btn-link btnCancelar" href="#" onclick="HabilitarModoEdicao(false)" style="display: none">&nbsp;Cancelar</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">Imprimir</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    @using (Html.BeginForm("SalvarFuncionario", "Funcionario", FormMethod.Post, new { role = "form", id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.SexoId, new {id="SexoId", name= "SexoId" });
+
+
+
+                        @Html.CheckBoxFor(funcionario => funcionario.Ativo, new { @class = "form-control disabled", id = "hdAtivo", style = "display:none" })
+
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" });
+
+                        <fiedset>
+                            @*<div class="form-group text-left">
+                        <input type="submit" value="Salvar" class="btn btn-primary" />
+                    </div>*@
+
+                            <legend>
+                                <h5 class="laranja"><strong><span class="glyphicon glyphicon-user"></span>&nbsp;Informações Basicas</strong></h5>
+                            </legend>
+                            <div class="container-fluid" id="cnt_identificacao">
+                                <div class="row" id="ident_NomeEmail">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.Nome, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.Nome, new { @class = "form-control disabled", @placeholder = "Digite o nome" })
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.Matricula, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.Matricula, new { id = "txtID", @class = "form-control disabled", @placeholder = "ID" })
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Matricula, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.DataNascimento, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.DataNascimento, new { @class = "form-control datas" })
+                                        </div>
+                                        @*@Html.ValidationMessageFor(m => m.DataNascimento, "", new { @class = "text-danger" })*@
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label" for="cmbEstadoCivil">Estado Civil</label>
+                                            @Html.DropDownListFor(f => f.EstadoCivil.Id, (IEnumerable<SelectListItem>)ViewData["cmbEstadoCivil"], new { id = "cmbEstadoCivil", @class = "form-control tpa_select2" });
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.EstadoCivil.Id, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="control-group col-md-2">
+                                        <label class="control-label" for="sexo">Sexo</label>
+                                        <div class="Controls">
+                                            <label class="radio-inline">
+                                                @*@Html.RadioButton("Sexo", @Enuns.eSexo.Masculino.Value().ToString(), Model.SexoId == Enuns.eSexo.Masculino.Value(), new { name = "optSexo", onclick = "selecionarSexo(this)" })*@
+                                                @Html.RadioButtonFor(opt => opt.SexoId, Enuns.eSexo.Masculino.Value(), new { name = "optSexo", @class = "radio", onclick = "selecionarSexo(this)", @checked = (@Model.SexoId.ToString() == "1") ? "true" : "false" })
+
+                                                Masculino
+                                            </label>
+                                            <label class="radio-inline">
+                                                @*@Html.RadioButton("Sexo", @Enuns.eSexo.Feminino.Value().ToString(), Model.SexoId == Enuns.eSexo.Feminino.Value(), new { name = "optSexo", onclick = "selecionarSexo(this)" })*@
+
+                                                @Html.RadioButtonFor(opt => opt.SexoId,Enuns.eSexo.Feminino.Value(), new { name = "optSexo",@class="radio", onclick = "selecionarSexo(this)" , @checked=(@Model.SexoId.ToString() == "2")? "true" : "false" })
+
+                                                Feminino
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <legend>
+                                <h5 class="laranja"><strong><span class="glyphicon glyphicon-earphone"></span>&nbsp;Contatos</strong></h5>
+                            </legend>
+                            <div class="container-fluid" id="cnt_Telefones">
+                                <div id="row_Emails" class="row">
+                                    @* ---- Emails ----*@
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.EmailProfissional, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.EmailProfissional, new { @class = "form-control", @placeholder = "Informe o email corporativo do funcionario" })
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.EmailProfissional, "", new { @class = "text-danger" })
+                                    </div>
+                            
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.Telefone, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.Telefone, new { @class = "form-control telefone_fixo"})
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Telefone, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div id="row_Telefones" class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.EmailPessoal, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.EmailPessoal, new { @class = "form-control", @placeholder = "Informe o email Pessoal do funcionario" })
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.EmailPessoal, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.Celular, new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.Celular, new { @class = "form-control telefone_celular" })
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Celular, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <legend id="Endereco">
+                                <h5 class="laranja"><strong><span class="glyphicon glyphicon-globe"></span>&nbsp;Endereço</strong></h5>
+                            </legend>
+                            <div class="container-fluid" id="cnt_Endereco">
+                                <div class="row" id="Endereco_Rua">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            @Html.LabelFor(funcionario => funcionario.Endereco,new { @class = "control-label" })
+                                            @Html.TextBoxFor(funcionario => funcionario.Endereco, new { @class = "form-control", @placeholder = "Rua/Av, Numero" })
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.Endereco, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="row" id="Endereco_CEP">
+                                    <div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                @Html.LabelFor(funcionario => funcionario.CEP, new { @class = "control-label" })
+                                                @Html.TextBoxFor(funcionario => funcionario.CEP, new { @class = "form-control cep", @placeholder = "Informe o CEP", id = "txtInfoCEP", style = "width: 100px;" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.CEP, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group" style="padding-left: 0px;">
+                                                @Html.LabelFor(funcionario => funcionario.Bairro, new { @class = "control-label" })
+                                                @Html.TextBoxFor(funcionario => funcionario.Bairro, new { @class = "form-control", @placeholder = "Informe o nome do Bairro" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Bairro, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                @Html.LabelFor(funcionario => funcionario.Cidade, new { @class = "control-label" })
+                                                @Html.TextBoxFor(funcionario => funcionario.Cidade, new { @class = "form-control", @placeholder = "Informe a Cidade"})
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Cidade, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="form-group">
+                                                @Html.LabelFor(funcionario => funcionario.Estado, new { @class = "control-label" })
+                                                @Html.TextBoxFor(funcionario => funcionario.Estado, new { @class = "form-control", @placeholder = "UF", style = "width: 50px;" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Estado, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fiedset>
+                    }
+                </div>
+                <br />
+                <!-- /.panel-body -->
+                <div class="panel-footer">
+                    <label class="info"> Ultima atualização : </label> @DateTime.Now
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function selecionarSexo(opcaoClicada) {
+        $('#SexoId').val(opcaoClicada.value);
+    }
+
+</script>
+

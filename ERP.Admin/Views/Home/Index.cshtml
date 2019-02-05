@@ -1,0 +1,214 @@
+﻿@using ERP.RH.Application
+@using RH.UI
+@using RH.Domain.Entities
+
+@model ERP.Presentation.Api.Models.DashboardViewModel
+
+@{
+
+    ViewBag.Title = "View";
+}
+
+
+@{
+
+    var @app = new FuncionarioApplication(RH.UI.AppConfig.ConnectionString);
+    Funcionario @funcionario;
+    Contrato @ctr;
+    string @caminhoImage;
+    ViewBag.Title = "Funcionarios";
+
+    var @ListaDeFuncionarios = Model.Funcionarios.Where(model => model.Ativo == true);
+    var @percent_ativos = (Model.QtdDeFuncionariosAtivos / Convert.ToDouble(Model.QtdDeFuncionarios)).ToString("0 %");
+    var @inativos = Model.QtdDeFuncionarios - Model.QtdDeFuncionariosAtivos;
+    var @percent_inativos = (Convert.ToDouble(@inativos) / Convert.ToDouble(Model.QtdDeFuncionarios)).ToString("P");
+}
+
+
+<!-- page content -->
+
+<div class="right_col" role="main">
+
+    <!-- top tiles -->
+
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Dashboard</h3>
+        </div>
+
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Procurar...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Ir</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Quadros do Dashboard*@
+    <div class="row tile_count">
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> Total de Funcionarios</span>
+            <div class="count">@Html.DisplayTextFor(m => m.QtdDeFuncionarios)</div>
+            <span class="count_bottom">Ativos e desligados</span>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-clock-o"></i> Ativos</span>
+            <div class="count green">@Html.DisplayTextFor(m => m.QtdDeFuncionariosAtivos)</div>
+            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>@percent_ativos</i> Do total geral</span>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> Desligados</span>
+            <div class="count red">@inativos</div>
+            <span class="count_bottom"><i class="red"><i class="fa fa-sort-asc"></i>@percent_inativos</i> Do total geral</span>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> Novos Contratados</span>
+            <div class="count">3</div>
+            <span class="count_bottom">No mes atual</span>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> Total de Clientes</span>
+            <div class="count">@Html.DisplayTextFor(m => m.QtdDeClientes)</div>
+            <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
+        </div>
+        <div style="display:none">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-user"></i> Total Connections</span>
+                <div class="count">7,325</div>
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- /top tiles -->
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Lista de Funcionarios Ativos <small>Inativos ou desligados não aparecerão aqui.</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Settings 1</a></li>
+                                <li><a href="#">Settings 2</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th>
+                                    <input type="checkbox" id="check-all" class="flat">
+                                </th>
+                                <th class="column-title">Nome </th>
+                                <th class="column-title">Email </th>
+                                <th class="column-title">Situação </th>
+                                <th class="column-title">Status </th>
+                                <th class="column-title no-link last">Manutenção </th>
+                                <th class="bulk-actions" colspan="5">
+                                    <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var func in @ListaDeFuncionarios)
+                            {
+                                {
+                                    using (ContratoApplication cApp = new ContratoApplication())
+                                    {
+                                        ctr = cApp.RecuperaContratoPorFuncionario(func.Id);
+                                    }
+
+                                }
+                                <tr style="height:10px">
+                                    <td class="a-center ">
+                                        <input type="checkbox" class="flat" name="table_records">
+                                    </td>
+                                    <td>
+                                        @{
+
+                                            var profileImg = "/Content/Images/funcionarios/" + func.EmailProfissional + ".jpg";
+
+                                            var absolutePath = HttpContext.Current.Server.MapPath(profileImg);
+
+                                            if (File.Exists(absolutePath))
+                                            {
+
+                                                caminhoImage = "/Content/Images/funcionarios/" + func.EmailProfissional + ".jpg";
+                                            }
+                                            else
+
+                                            {
+                                                caminhoImage = "/admin/production/images/user.png";
+                                            }
+                                        }
+
+
+                                        <img src="@caminhoImage" width="50" heigth="50">
+                                        &nbsp;@func.Nome
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@func.EmailProfissional">@func.EmailProfissional</a>
+                                    </td>
+                                    <td>
+                                        @ctr.StatusContrato
+                                    </td>
+                                    <td>
+                                        <div class="col-sm-5">
+                                            @if (@func.Ativo)
+
+                                            {
+                                                <button type="button" class="btn btn-lg btn-toggle active" data-toggle="button" aria-pressed="true" autocomplete="off" disabled="disabled">
+
+                                                    <div class="handle"></div>
+                                                </button>
+                                            }
+
+                                            else
+
+                                            {
+                                                <button type="button" class="btn btn-lg btn-toggle" data-toggle="button" aria-pressed="true" autocomplete="off" disabled="disabled">
+                                                    <div class="handle"></div>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row" style="padding: 0px">
+                                            <a href="@Url.Action("FichaCadastral", "Funcionario", new {id = func.Id, modo = "edit"})" class="btn btn-warning btn-sm laranja_bg"><span class="glyphicon glyphicon-edit"></span>&nbsp;Editar</a>
+                                            <a href="@Url.Action("FichaCadastral", "Funcionario", new {id = func.Id, modo = "read"})" class="btn btn-success btn-sm azul_bg">
+                                                <span class="glyphicon glyphicon-new-window"></span>&nbsp;Ficha
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+</script>
+

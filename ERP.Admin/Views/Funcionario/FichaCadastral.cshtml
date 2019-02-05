@@ -1,0 +1,106 @@
+﻿<!-- Instancia do modelo no qual terá os dados -->
+@model RH.ViewModel.FuncionarioViewModel
+
+@{
+    ViewBag.Title = ViewBag.TituloDaPagina;
+    var @editar = ViewBag.Editar;
+}
+<div class="right_col" role="main">
+
+    @{Html.RenderPartial("_Resumo");}
+
+    <fieldset id="Campos_Form">
+        <legend>
+            <h3 class="azul"><strong></strong></h3>
+        </legend>
+        @{
+            var visivel = "none";
+
+            if (ViewBag.Modo == "edit")
+            {
+                visivel = "inline";
+            }
+
+        }
+        <div class="row botoes" style="padding: 6px; border: blueviolet; border: thin; display:@visivel">
+            <button class="btn btn-submit botaoSubmit"><i class="fa fa-save"></i>&nbsp;Salvar Alterações</button>
+            <button onclick="HabilitarModoEdicao(false)" class="btn btn-danger"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;Cancelar</button>
+        </div>
+        <div id="Linha_Botoes_Tab" class="row">
+            <div class="col-xs-12">
+                <strong>
+                    <ul class="nav nav-tabs cor_azul">
+                        <li class="active"><a href="#TabInfo" id="info" data-toggle="tab" pilltype="pill">Informações</a></li>
+                        <li><a href="#TabDoc" id="doc" data-toggle="tab" pilltype="pill">Documentos</a></li>
+                        <li><a href="#TabContratacao" id="Contrat" data-toggle="tab" pilltype="pill">Contratação</a></li>
+                        <li><a href="#TabEscolaridade" id="Escolar" data-toggle="tab" pilltype="pill">Beneficios</a></li>
+                        <li><a href="#TabHistorico" id="hist" data-toggle="tab" pilltype="pill">Eventos <span id="qtdItems" class="badge"> 4 </span></a></li>
+                    </ul>
+                </strong>
+            </div>
+        </div>
+        <div id="Linha_Conteudo" class="row">
+            <div id="Colunas_Conteudo" class="col-md-12">
+                <!--
+                Classe 'tab-content' marca a Div devidamente construida como o conteudo das guias que estarao vinculadas com a 'nav' acima
+                Classe 'tab-pane' marcada em cada Div, indica que a div representa a tab especificada pelo ID e vinculada com o link acima--
+                -->
+                <div id="conteudoTab" class="tab-content cor_azul">
+                    @{Html.RenderPartial("_TabInfo");}
+                    @{Html.RenderPartial("_TabDoc");}
+                    @{Html.RenderPartial("_TabContratacao");}
+                    @{Html.RenderPartial("_TabEventos");}
+                    @{Html.RenderPartial("_TabEscolaridade");}
+                </div>
+            </div>
+        </div> <!--Conteudo-->
+    </fieldset>
+</div>
+
+<!-- Mascaras -->
+<script src="~/Content/jquery/jquery.mask.min.js"></script>
+
+<script type="text/javascript">
+
+    $('.datas').mask("00/00/0000", { placeholder: "__/__/____" });
+    $('.cpf').mask('000.000.000-00', { reverse: true });
+    $('.telefone_fixo').mask('(00) 0000-0000', { placeholder: "(__) ____-____" });
+    $('.telefone_celular').mask('(00) 90000-0000', { placeholder: "(__) 9____-____" });
+    $('.dinheiro').mask("#.##0,00", { reverse: true });
+    $('.cep').mask('00000-000', { reverse: true, placeholder: "_____-___" });
+</script>
+
+<script>
+    function HabilitarModoEdicao(sim) {
+        if (sim === true) {
+            $('.form-control').removeAttr('disabled');
+            $('.botoes').show();
+            $('.btnCancelar').show();
+            $('.btnEditar').hide();
+
+
+        } else {
+            $('.form-control').attr('disabled', 'disabled');
+            $('.botoes').hide();
+            $('.btnCancelar').hide();
+            $('.btnEditar').show();
+        }
+        return false;
+    }
+
+</script>
+@if (@editar == false && ViewBag.Modo == "read")
+{
+    <script>
+        HabilitarModoEdicao(false);
+
+        $('.btnCancelar').show();
+        $('.btnEditar').hide();
+    </script>
+};
+
+<script>
+    $(".control-label").addClass("azul");
+    $("h5").addClass("laranja");
+    document.getElementById("qtdItems").innerText = document.getElementById('tblEventos').rows.length - 1;
+</script>

@@ -1,0 +1,125 @@
+﻿@using ERP.RH.Application
+@using RH.Domain.Entities
+@model IEnumerable<RH.ViewModel.FuncionarioViewModel>
+
+@{
+        ViewBag.Title = "Funcionarios";
+    }
+
+    @{
+        var @app = new FuncionarioApplication();
+        Funcionario @funcionario;
+        Contrato @ctr;
+        string @caminhoImage;
+        ViewBag.Title = "Funcionarios";
+
+        var @ListaOrdenada = Model.OrderByDescending(c => c.Ativo);
+
+    }
+
+    <!-- page content -->
+
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Contacts Design</h3>
+                </div>
+                <div class="title_right">
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="clearfix"></div>
+                                @foreach (var func in @ListaOrdenada)
+                                {
+                                    {
+                                        using (ContratoApplication cApp = new ContratoApplication())
+                                        {
+                                            ctr = cApp.RecuperaContratoPorFuncionario(func.Id);
+                                        }
+
+                                        var profileImg = "/Content/Images/funcionarios/" + func.EmailProfissional + ".jpg";
+                                        var absolutePath = HttpContext.Current.Server.MapPath(profileImg);
+
+
+                                        if (File.Exists(absolutePath))
+                                        {
+                                            caminhoImage = "/Content/Images/funcionarios/" + func.EmailProfissional + ".jpg";
+                                        }
+                                        else
+                                        {
+                                            caminhoImage = "/admin/production/images/user.png";
+                                        }
+                                    }
+
+                                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                                        <div class="well profile_view">
+                                            <div class="col-sm-12">
+
+                                                @if (@func.Ativo)
+                                                {
+                                                    <h4 class="brief"><i>Ativo</i></h4>
+                                                }
+                                                else
+                                                {
+                                                    <h4 class="brief"><i>Desligado</i></h4>
+                                                }
+
+                                                <div class="left col-xs-7">
+                                                    <h3>@func.NomeDoFuncionario.NomeCurto</h3>
+                                                    <p><strong>E-Mail: </strong>@func.EmailProfissional  </p>
+                                                    <p><strong>Cargo: </strong>  </p>
+                                                    <ul class="list-unstyled">
+                                                        <li><i class="fa fa-building"></i> <strong>Endereço: </strong> @func.Endereco </li>
+                                                        <li><i class="fa fa-phone"></i> <strong>Tel. : </strong> @func.Telefone </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="right col-xs-5 text-center">
+                                                    <img src="@caminhoImage" alt="" class="img-circle img-responsive">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 bottom text-center">
+                                                <div class="col-xs-12 col-sm-6 emphasis">
+                                                    <p class="ratings">
+                                                        <a>4.0</a>
+                                                        <a href="#"><span class="fa fa-star"></span></a>
+                                                        <a href="#"><span class="fa fa-star"></span></a>
+                                                        <a href="#"><span class="fa fa-star"></span></a>
+                                                        <a href="#"><span class="fa fa-star"></span></a>
+                                                        <a href="#"><span class="fa fa-star-o"></span></a>
+                                                    </p>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6 emphasis">
+                                                    <button type="button" class="btn btn-success btn-xs">
+                                                        <i class="fa fa-user">
+                                                        </i> <i class="fa fa-comments-o"></i>
+                                                    </button>
+                                                    <a href="@Url.Action("FichaCadastral", "Funcionario", new {id = func.Id, modo = "read"})" class="btn btn-primary btn-xs active">
+                                                        <i class="fa fa-user"> </i> Detalhes
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

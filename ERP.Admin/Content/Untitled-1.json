@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "businessPhones": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "jobTitle": {
+            "type": "string"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "mobilePhone": {
+            "type": "string"
+          },
+          "officeLocation": {
+            "type": "string"
+          },
+          "preferredLanguage": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "userPrincipalName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "displayName",
+          "givenName",
+          "mail",
+          "mobilePhone",
+          "surname",
+          "userPrincipalName",
+          "id"
+        ]
+      }
+    },
+    "@odata.context": {
+      "type": "string"
+    }
+  }
+}

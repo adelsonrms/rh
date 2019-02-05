@@ -1,0 +1,85 @@
+﻿@using ERP.RH.Application
+@using Microsoft.AspNet.Identity
+@using RH.Domain.Entities
+
+@{
+
+    //System.Security.Principal.IIdentity login;
+    //Funcionario funcionario;
+    string NomeLogin = "";
+    string ID = "";
+
+    try
+    {
+        if (Request.IsAuthenticated)
+        {
+            Funcionario funcionario = new FuncionarioApplication(RH.UI.AppConfig.ConnectionString).ObtemFuncionario(User.Identity.GetUserName());
+            ID = funcionario.Id.ToString();
+
+            // var MSGraph = new MSGraphApiService(new AppClient());
+
+            // User user = MSGraph.GetUser<User>(User.Identity.GetUserName()).Result;
+
+            funcionario = new FuncionarioApplication(RH.UI.AppConfig.ConnectionString).ObtemFuncionario(User.Identity.GetUserName());
+            //NomeLogin = user.DisplayName;
+        }
+    }
+    catch (Exception e)
+    {
+        NomeLogin = "";
+        ID = "";
+    }
+
+}
+
+
+
+<!--Barra de Navegação-->
+<!-- top navigation -->
+<div class="top_nav">
+    <div class="nav_menu">
+        <nav>
+            <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    
+                    @*Imagem/Nome do usuário*@
+                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <img  src="~/admin/production/images/img.jpg" alt="" class="profile_img"><span class="nomeUsuario"></span>&nbsp;
+                        <span class=" fa fa-angle-down"></span>
+                    </a>
+                    
+                    @*Menu de Opçõe*@
+                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                        <li><a href="@Url.Action("FichaCadastral", "Funcionario", new {id = @ID, modo = "read"})"> Profile</a></li>
+                        <li>
+                            <a href="javascript:;">
+                                <span class="badge bg-red pull-right">50%</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li><a href="javascript:;">Help</a></li>
+                        <li><a href="@Url.Action("Logout", "Account")"><i class="fa fa-sign-out pull-right"></i> Sair</a></li>
+                    </ul>
+                </li>
+
+                @* --------- Mensagens/Notifcação -------------*@
+                <li role="presentation" class="dropdown notificacoes" style="display:none">
+                    @*Icone de Notificações*@
+                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="badge bg-green qtdMessagens">6</span>
+                    </a>
+
+                    @*Lista de Notificações / Mensagens do usuario*@
+                    <ul id="mnuItensNotificacoes" class="dropdown-menu list-unstyled msg_list" role="menu">
+                        
+                    </ul>
+
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

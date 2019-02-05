@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TECNUN - Gestão Interna</title>
+    <!-- Bootstrap -->
+    <link href="~/admin/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/admin/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- iCheck - Checkbox customizado -->
+    <link href="~/admin/vendors/iCheck/skins/flat/green.css" rel="stylesheet" />
+    <!-- Custom Theme Style -->
+    <link href="~/admin/build/css/custom.css" rel="stylesheet">
+    <link href="~/admin/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="~/Content/tecnun.css" rel="stylesheet" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .geral {
+            min-height: 100%;
+            position: relative;
+            width: 800px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .content {
+            overflow: hidden;
+        }
+
+        .aside {
+            width: 200px;
+        }
+
+        .fleft {
+            float: left;
+        }
+
+        .fright {
+            float: right;
+        }
+    </style>
+</head>
+
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            @{
+                if (Context.User.Identity.IsAuthenticated)
+                {
+                    Html.RenderPartial("_Admin_01_Sidebar");
+                    Html.RenderPartial("_Admin_02_NavBar");
+
+                }
+            }
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer" style="text-align: center">
+            ERP Tecnun v 1.0 <a href="https://colorlib.com">Colorlib</a>
+        </div>
+        <div class="clearfix"></div>
+    </footer>
+    <!-- jQuery -->
+    <script src="~/admin/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/admin/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/admin/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- Mascaras -->
+    <script src="~/admin/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/admin/vendors/iCheck/icheck.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="~/admin/build/js/custom.min.js"></script>
+    <script src="~/Scripts/AjaxException.js"></script>
+    <script src="~/Scripts/jqAjax.js"></script>
+    <script src="~/Scripts/Api.js"></script>
+    <!-- Data Picker -->
+    <script src="~/admin/vendors/moment/moment.js"></script>
+    <script src="~/admin/vendors/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+
+    <script>
+        $('.datePicker').datetimepicker({ format: 'DD/MM/YYYY' });
+    </script>
+
+    @{
+        if (Request.IsAuthenticated)
+        {
+            <script>
+                $(document).ready(function () {
+                    ConsultarPerfil();
+                    ConsultarFoto('48x48', '.profile_img');
+                    ConsultarMensagens();
+                });
+            </script>
+        }
+
+    }
+
+    <script type="text/javascript">
+        $('.botaoSubmit').on('click',
+            function () {
+                var $this = $(this);
+                $this.button('loading');
+                $('#frmEdit').submit();
+            }
+        );
+    </script>
+
+
+</body>
+</html>
