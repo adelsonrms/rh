@@ -77,42 +77,13 @@ namespace Identity.Authentication.Providers
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
-                ClientId = "TECUNU.ERP.RH.WebApp",
-                ClientSecret = "secret",
-                Authority = "http://localhost:5000/", //"https://login.tecnun.com.br",
-                RedirectUri = "https://localhost:44379/", //"https://rh.tecnun.com.br",
+                ClientId = ConfigurationManager.AppSettings["IdSrv:ClientId"],
+                ClientSecret = ConfigurationManager.AppSettings["IdSrv:ClientSecret"],
+                Authority = ConfigurationManager.AppSettings["IdSrv:Authority"],
+                RedirectUri = ConfigurationManager.AppSettings["IdSrv:RedirectUri"],
                 RequireHttpsMetadata = false,
                 ResponseType = "code id_token",
-                Scope = "api1 openid profile",
-                Notifications = new OpenIdConnectAuthenticationNotifications
-                {
-                    RedirectToIdentityProvider = (context) =>
-                    {
-                        context.ProtocolMessage.DomainHint = "tecnun.com.br";
-                        return Task.FromResult(0);
-                    },
-                    AuthenticationFailed = (context) =>
-                    {
-
-                        var erro = context.Exception.Message;
-
-
-                        if (erro.StartsWith("OICE_20004") || erro.Contains("IDX10311"))
-                        {
-                            context.SkipToNextMiddleware();
-                            return Task.FromResult(0);
-                        }
-
-                        if (erro.Contains("AADSTS50105"))
-                        {
-                            erro = "Office 365 Login - Acesso Negado à Aplicação";
-                        }
-
-                        context.HandleResponse();
-                        context.Response.Redirect("/Account/ErrorLogin/?mensagem=" + erro);
-                        return Task.FromResult(0);
-                    }
-                }
+                Scope = "api1 openid profile"
             });
             return app;
         }
