@@ -24,6 +24,8 @@ namespace ERP.Presentation.Api.App_Start
             app.UseFormsAuthentication();
 
             app.UseOffice365ExternalAuthentication();
+            app.UseTecnunAuthServer();
+
         }
        
     }

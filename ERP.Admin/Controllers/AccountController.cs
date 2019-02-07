@@ -272,6 +272,8 @@ namespace RH.UI.Controllers
             }
         }
 
+        #region Metodos de Login Externo usando Office 365
+
         [HttpPost]
         [AllowAnonymous]
         public ActionResult LoginOffice365(string provider, string returnUrl)
@@ -403,7 +405,9 @@ namespace RH.UI.Controllers
                 OpenIdConnectAuthenticationDefaults.AuthenticationType, 
                 CookieAuthenticationDefaults.AuthenticationType);
         }
-        
+
+        #endregion
+
         // callback do logoff
         /// <returns></returns>
         [AllowAnonymous]
