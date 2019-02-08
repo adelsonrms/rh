@@ -77,13 +77,23 @@ namespace Identity.Authentication.Providers
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
-                ClientId = ConfigurationManager.AppSettings["IdSrv:ClientId"],
-                ClientSecret = ConfigurationManager.AppSettings["IdSrv:ClientSecret"],
-                Authority = ConfigurationManager.AppSettings["IdSrv:Authority"],
-                RedirectUri = ConfigurationManager.AppSettings["IdSrv:RedirectUri"],
+
+                //ClientId = "PortalTecnun",//ConfigurationManager.AppSettings["IdSrv:ClientId"],
+                //ClientSecret = "PortalTecnun", //ConfigurationManager.AppSettings["IdSrv:ClientSecret"],
+                //Authority = "https://login.tecnun.com.br/", //ConfigurationManager.AppSettings["IdSrv:Authority"],
+                //RedirectUri = "https://rh.tecnun.com.br/", //ConfigurationManager.AppSettings["IdSrv:RedirectUri"],
+                //RequireHttpsMetadata = false,
+                //ResponseType = "code id_token",
+                //Scope = "openid profile api1"
+
+
+                ClientId = "PortalTecnunDev",//ConfigurationManager.AppSettings["IdSrv:ClientId"],
+                ClientSecret = "PortalTecnun", //ConfigurationManager.AppSettings["IdSrv:ClientSecret"],
+                Authority = "http://localhost:5000/", //"https://login.tecnun.com.br/", //ConfigurationManager.AppSettings["IdSrv:Authority"],
+                RedirectUri = "https://localhost:44379/signin-oidc", //"https://rh.tecnun.com.br", //ConfigurationManager.AppSettings["IdSrv:RedirectUri"],
                 RequireHttpsMetadata = false,
                 ResponseType = "code id_token",
-                Scope = "api1 openid profile"
+                Scope = "openid profile api1"
             });
             return app;
         }
