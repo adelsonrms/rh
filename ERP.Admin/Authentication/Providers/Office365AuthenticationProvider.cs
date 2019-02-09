@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
+using RH.UI;
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -12,37 +13,24 @@ namespace Identity.Authentication.Providers
 {
     public static class Office365AuthenticationProvider
     {
-        // ID do Aplicativo cadastrado no Azure
-        private static string clientId = ConfigurationManager.AppSettings["ClientId"];
-        
-        // RedirectUri : É a URL que será redirecionada após o login
-        private static string redirectUrl = ConfigurationManager.AppSettings["redirectUrl"];
-        
-        // Tenant ID : É o ID da empresa
-        private static string tenant = ConfigurationManager.AppSettings["Tenant"];
-        private static string postLogoutRedirectUri = ConfigurationManager.AppSettings["PostLogoutRedirectUri"];
-        private static string redirectUri = ConfigurationManager.AppSettings["RedirectUri"];
-        
         // Authority : É a url do serviço de autenticação da Microsoft. Ex : https://login.microsoftonline.com/contoso.onmicrosoft.com
-        private static string authority = String.Format(System.Globalization.CultureInfo.InvariantCulture, ConfigurationManager.AppSettings["Authority"], tenant);
-
         public static IAppBuilder UseOffice365ExternalAuthentication(this IAppBuilder app)
         {
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
-                ClientId = clientId,
-                ClientSecret = SettingsHelper.ClientSecret,
-                Authority = SettingsHelper.Authority,
-                PostLogoutRedirectUri = postLogoutRedirectUri,
-                RedirectUri = redirectUri,
+                ClientId = AppConfig.AzureAppClient.ClientId,
+                ClientSecret = AppConfig.AzureAppClient.ClientSecret,
+                Authority = AppConfig.AzureAppClient.Authority,
+                PostLogoutRedirectUri = AppConfig.AzureAppClient.PostLogoutRedirectUri,
+                RedirectUri = AppConfig.AzureAppClient.RedirectUri,
                 AuthenticationMode = AuthenticationMode.Passive,
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     RedirectToIdentityProvider = (context) =>
                     {
-                        context.ProtocolMessage.DomainHint = "tecnun.com.br";
+                        context.ProtocolMessage.DomainHint = AppConfig.AzureAppClient.Domain;
                         return Task.FromResult(0);
                     },
                     AuthenticationFailed = (context) =>
@@ -70,34 +58,21 @@ namespace Identity.Authentication.Providers
             });
             return app;
         }
-
-
         public static IAppBuilder UseTecnunAuthServer(this IAppBuilder app)
         {
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
-
-                //ClientId = "PortalTecnun",//ConfigurationManager.AppSettings["IdSrv:ClientId"],
-                //ClientSecret = "PortalTecnun", //ConfigurationManager.AppSettings["IdSrv:ClientSecret"],
-                //Authority = "https://login.tecnun.com.br/", //ConfigurationManager.AppSettings["IdSrv:Authority"],
-                //RedirectUri = "https://rh.tecnun.com.br/", //ConfigurationManager.AppSettings["IdSrv:RedirectUri"],
-                //RequireHttpsMetadata = false,
-                //ResponseType = "code id_token",
-                //Scope = "openid profile api1"
-
-
-                ClientId = "PortalTecnunDev",//ConfigurationManager.AppSettings["IdSrv:ClientId"],
-                ClientSecret = "PortalTecnun", //ConfigurationManager.AppSettings["IdSrv:ClientSecret"],
-                Authority = "http://localhost:5000/", //"https://login.tecnun.com.br/", //ConfigurationManager.AppSettings["IdSrv:Authority"],
-                RedirectUri = "https://localhost:44379/signin-oidc", //"https://rh.tecnun.com.br", //ConfigurationManager.AppSettings["IdSrv:RedirectUri"],
+                ClientId = AppConfig.AuthServerClient.ClientId,
+                ClientSecret = AppConfig.AuthServerClient.ClientSecret,
+                Authority = AppConfig.AuthServerClient.Authority,
+                RedirectUri = AppConfig.AuthServerClient.RedirectUri,
                 RequireHttpsMetadata = false,
                 ResponseType = "code id_token",
                 Scope = "openid profile api1"
             });
             return app;
         }
-
-
     }
 }

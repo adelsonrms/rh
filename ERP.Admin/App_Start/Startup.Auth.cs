@@ -23,7 +23,7 @@ namespace ERP.Presentation.Api.App_Start
             //Middlearw para autenticação via Forms
             app.UseFormsAuthentication();
 
-            //app.UseOffice365ExternalAuthentication();
+            app.UseOffice365ExternalAuthentication();
 
             app.UseTecnunAuthServer();
 

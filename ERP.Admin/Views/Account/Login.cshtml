@@ -77,15 +77,15 @@
                             <fieldset>
                                 <div class="row">
                                     @Html.ValidationSummary(true, "", new {@class = "text-danger"})
-                                    <div class="form-inline col-lg-12">
+                                    <div class="form-horizontal col-lg-12">
 
                                         <div class="input-group" style="margin-bottom: 15px">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", id = "txtEmail"})
+                                            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", id = "txtEmail", placeholder="usuario@tecnun.com.br"})
                                         </div>
                                         @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
 
-                                        <div class="input-group" style="margin-bottom: 15px">
+                                        <div class="input-group" style="margin-bottom: 15px; display:none">
                                             <span class="input-group-addon"><i>&#64;</i></span>
                                             <button class="btn btn-default" disabled="disabled" style="width: 100%;text-align: left;">tecnun.com.br</button>
                                         </div>
